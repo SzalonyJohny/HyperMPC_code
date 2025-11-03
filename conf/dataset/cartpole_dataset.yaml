@@ -1,0 +1,39 @@
+# @package _global_
+
+dataset:
+  Tp: 0.01 # FIXME settings
+  wandb_project: "hpm_cartpole"
+
+  wandb_path: "wandb-registry-dataset/cartpole_datasets_split:v1"
+
+  observation_window: 1
+  prediction_horizon: ${hpm.rollout.val} # for interpolers, val>=train
+
+  observarions_channels: 5 # FIXME get from dataset
+  
+  observations_preprocessor:
+    _target_: "robot_model.cartpole.state_preprocesor.CartPoleStateAndCtrlPreprocessor"
+
+  train_dataset:
+    _target_: "dataset_reader.cartpole_dataset.CartPoleHyperDataset2"
+    _partial_: True
+    # dataset_path: "test_data/lab_rss1_train.csv"
+    dataset_file: "train.csv"
+    observation_window: ${dataset.observation_window}
+    prediction_horizon: ${hpm.rollout.train}
+    stride: 2
+    device: ${hpm.device}
+
+  val_dataset:
+    _target_: ${dataset.train_dataset._target_}
+    _partial_: True
+    # dataset_path: "test_data/lab_rss1_val.csv"
+    dataset_file: "val.csv"
+    observation_window: ${dataset.observation_window}
+    prediction_horizon: ${hpm.rollout.val}
+    stride: 2
+    device: ${hpm.device}
+
+  # Dataset loader settings
+  shuffle: True
+  dataloader_workers: 0

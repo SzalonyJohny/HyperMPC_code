@@ -1,0 +1,21 @@
+# @package _global_
+hmodel:
+
+  # FIXME for compatibility with the hyper models
+  time_series_laten_size: 8
+
+  model:
+    _partial_: True
+
+    _target_: "hyper_prediction_models.const_param_model.ConstParamModel"
+    
+    # default params -> partial
+    # always_positive: from dmodel
+    device: ${hpm.device}
+
+  interpoler:
+    _target_: "hyper_prediction_models.const_param_interpolation.ConstParamInterpolation"
+    param_ctrl_point: 1
+    prediction_horizon: ${dataset.prediction_horizon}
+    integration_method: ${hpm.integration_method}
+    device: ${hpm.device}

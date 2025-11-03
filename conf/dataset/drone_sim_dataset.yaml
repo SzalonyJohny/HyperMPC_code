@@ -1,0 +1,38 @@
+# @package _global_
+
+dataset:
+  Tp: 0.01 
+
+  wandb_project: "hpm_drone_sim"
+
+  wandb_path: "f1tenth-org/wandb-registry-dataset/drone_datasets_split:1.0m0.5kg_v2"
+
+  observation_window: 25
+  prediction_horizon: ${hpm.rollout.val} # for interpolers, val>=train
+
+  observarions_channels: 10 # FIXME get from dataset
+  
+  observations_preprocessor:
+    _target_: "robot_model.drone.drone_observation_preprocesor.DroneObservationPreprocessor"
+
+  train_dataset:
+    _target_: "dataset_reader.drone_sim_dataset.DroneSimHyperDataset"
+    _partial_: True
+    dataset_file: "train.csv"
+    observation_window: ${dataset.observation_window}
+    prediction_horizon: ${hpm.rollout.train}
+    stride: 5
+    device: ${hpm.device}
+
+  val_dataset:
+    _target_: ${dataset.train_dataset._target_}
+    _partial_: True
+    dataset_file: "val.csv"
+    observation_window: ${dataset.observation_window}
+    prediction_horizon: ${hpm.rollout.val}
+    stride: 10
+    device: ${hpm.device}
+
+  # Dataset loader settings
+  shuffle: True
+  dataloader_workers: 0

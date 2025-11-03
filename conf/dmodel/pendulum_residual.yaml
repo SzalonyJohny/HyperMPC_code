@@ -1,0 +1,24 @@
+# @package _global_
+
+dmodel:
+
+  pretrain_init_model_path: "model:v1318"
+
+  model:
+    _partial_: True
+    _target_: "robot_model.pendulum.pendulum_residual.ResidualPendulumDynamisc"
+    skip_gr: False
+    
+    preprocessor:
+      _target_: "robot_model.pendulum.pendulum_state_preprocesor.PendulumStatePreprocessor"
+      max_dq: 25.0
+      max_u: 1.0
+    
+    activation: 
+      _target_: "torch.nn.Tanh"
+  
+    layer_sizes: [4, 8, 8, 1]
+
+    compile_model: ${hpm.compile}
+
+    device: ${hpm.device}

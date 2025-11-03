@@ -1,0 +1,9 @@
+# @package _global_
+
+dmodel:
+  model:
+    _partial_: True
+    _target_: "robot_model.pendulum.pendulum_model.PendulumDynamisc"
+    skip_gr: False
+
+  pretrain_init_model_path: ""

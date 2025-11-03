@@ -1,0 +1,21 @@
+# @package _global_
+
+dmodel:
+
+  pretrain_init_model_path: "model:v23321"
+
+  model:
+    _partial_: True
+    _target_: "robot_model.car.residual_single_track_model.ResidualSingleTrack"
+    
+    preprocessor:
+      _target_: "robot_model.car.car_state_and_ctrl_preprocesor.CarStateAndCtrlPreprocessor"
+  
+    layer_sizes: [6, 32, 32, 4]
+
+    activation: 
+      _target_: "torch.nn.ReLU"
+    
+    compile_model: ${hpm.compile}
+
+    device: ${hpm.device}

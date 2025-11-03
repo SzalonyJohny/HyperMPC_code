@@ -1,0 +1,13 @@
+# @package _global_
+
+dmodel:
+
+  pretrain_init_model_path: ""
+
+  model:
+    _partial_: True
+    _target_: "robot_model.drone.drone_model.DroneDynamisc"
+    enable_dist_forces: True
+    enable_dist_torques: False
+    only_forces: True
+    only_forces_regres_params: True

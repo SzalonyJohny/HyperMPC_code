@@ -1,0 +1,9 @@
+# @package _global_
+
+dmodel:
+
+  pretrain_init_model_path: "" # "model:v2581" # or 
+
+  model:
+    _partial_: True
+    _target_: "robot_model.car.single_track.PacejkaTiresSingleTrack"

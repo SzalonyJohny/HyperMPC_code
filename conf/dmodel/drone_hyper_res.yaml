@@ -1,0 +1,13 @@
+# @package _global_
+
+dmodel:
+
+  pretrain_init_model_path: ""
+
+  model:
+    _partial_: True
+    _target_: "robot_model.drone.drone_residual_hyper.DroneHyperResidualDynamisc"
+    only_forces_regres_params: False
+    layers_size: [10, 32, 6]
+    device: ${hpm.device}
+    model_nr: 1172

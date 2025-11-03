@@ -1,0 +1,50 @@
+# @package _global_
+
+dataset:
+  Tp: 0.01 # FIXME settings
+  wandb_project: "hpm_acrobot"
+
+  # mujoco moving ball
+  wandb_path: "f1tenth-org/wandb-registry-dataset/acrobot_movingball_datasets:v2"
+  
+  # mujoco not moving ball
+  # wandb_path: "f1tenth-org/wandb-registry-dataset/acrobot_datasets:v4" 
+
+  observation_window: 15
+  prediction_horizon: 85
+
+  observarions_channels: 6
+  
+  observations_preprocessor:
+    _target_: "robot_model.acrobot.observation_preprocesor.AcrobotObservationPreprocessor"
+    drop_control: True
+    compile: ${hpm.compile}
+
+  train_dataset:
+    _partial_: True
+    _target_: "dataset_reader.acrobot_dataset.AcrobotHyperDataset"
+    # dataset_path from downloaded artifact
+    train_val_test_split: [0.7, 0.2, 0.1]
+    mode: "train"
+    observation_window: ${dataset.observation_window}
+    prediction_horizon: ${dataset.prediction_horizon}
+    stride: 50
+
+
+  val_dataset:
+    _partial_: True
+    _target_: ${dataset.train_dataset._target_}
+    # dataset_path from downloaded artifact
+    train_val_test_split: ${dataset.train_dataset.train_val_test_split}
+    mode: "val"
+    observation_window: ${dataset.observation_window}
+    prediction_horizon: ${dataset.prediction_horizon}
+    stride: 50
+
+  # Dataset loader settings
+  shuffle: True
+  dataloader_workers: 0
+
+
+  
+  

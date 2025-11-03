@@ -1,0 +1,18 @@
+# @package _global_
+hmodel:
+  time_series_laten_size: 16
+    
+  model:
+    _partial_: True
+    _target_: "hyper_prediction_models.hyperdynamics.HyperDynamicsModel"
+    # time_series_encoder from file
+    compile_model: ${hpm.compile}
+    device: ${hpm.device}
+    middle_layer_size: 128
+  
+  interpoler:
+    _target_: "hyper_prediction_models.const_param_interpolation.ConstParamInterpolation"
+    param_ctrl_point: 1
+    prediction_horizon: ${dataset.prediction_horizon}
+    integration_method: ${hpm.integration_method}
+    device: ${hpm.device}

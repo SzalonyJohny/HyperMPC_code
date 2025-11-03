@@ -1,0 +1,102 @@
+defaults:
+  - _self_
+  - override hydra/launcher: joblib
+
+hydra:
+  launcher:
+    n_jobs: 1
+
+
+hpm:
+  rollout_len: 100
+
+  # const 
+  # model: "hpm_car/model:v23324"
+
+  # const short
+  # model: "hpm_car/model:v23786"
+
+  # hyper hidden size 16
+  # model: "hpm_car/model:v23598"
+
+  # hyper hidden size 8
+  # model: "hpm_car/model:v23377"
+
+  # hyper 0.5 control sigma
+  # model: "hpm_car/model:v23624"
+
+  # long horizon
+  # model: "hpm_car/model:v23627"
+
+  # 16ctrl 0.5sigma l0.2
+  # model: "hpm_car/model:v23636"
+
+  # without predictor
+  # model: "hpm_car/model:v23678"
+
+  # 8 ctrl points 0.5 sigma l 0.2 THE USED ONE
+  # model: "hpm_car/model:v23679"
+
+  # 14 ctrl points 0.5 sigma l 0.2 
+  # model: "hpm_car/model:v24300"
+
+  # 8 ctrl points 0.5 sigma l 0.1
+  # model: "hpm_car/model:v23680"
+
+  # Hyper Dynamics long
+  # model: "hpm_car/model:v23959"
+
+  # Hyper Dynamics short 2
+  # model: "hpm_car/model:v23821"
+
+  # Residual model [2 x 32]
+  # model: "hpm_car/model:v23617"
+
+  # Residual model [1 x 64] tanh
+  # model: "hpm_car/model:v24234"
+
+
+  # model_path: "f1tenth/hpm_pendulum_backlash/model:v"
+  # Hyper
+  # model_nr: 701 
+
+  # HyperPM_np
+  # model_nr: 1447
+
+  # Const
+  # model_nr: 1189 #1318
+
+  # Const short
+  # model_nr: 1427
+
+  # Hyperdynamics long
+  # model_nr: 1266
+
+  # Hyperdynamics short
+  # model_nr: 1244
+
+  # residual model
+  # model_nr: 1414
+
+
+################################
+################################
+  model_nr: 721
+
+
+  
+  
+  wandb:
+    enable: True
+    group: "default"
+  
+
+
+mpc:
+  # model: ${hpm.model_path}${hpm.model_nr} # pendulum
+  # model: ${hpm.model} # car
+  model: "hpm_drone_sim/model:v${hpm.model_nr}" # drone
+
+  wandb:
+    enable: True
+    group: ${hpm.wandb.group}

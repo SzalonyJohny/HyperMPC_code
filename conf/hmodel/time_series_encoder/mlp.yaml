@@ -1,0 +1,16 @@
+# @package _global_
+hmodel:
+  model:
+    time_series_encoder:
+      _target_: "hyper_prediction_models.mlp_time_series_encoder.MlpTimeSeriesEncoder"
+
+      observations_preprocessor: ${dataset.observations_preprocessor}
+
+      observarions_channels: ${dataset.observarions_channels}
+      middle_layer_size: 32
+      observation_length: ${dataset.observation_window}
+      time_series_latent_size: ${hmodel.time_series_laten_size}
+      layer_norm_1: False
+      layer_norm_4: False
+      compile: False
+      device: ${hpm.device} 

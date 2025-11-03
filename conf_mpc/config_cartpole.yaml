@@ -1,0 +1,53 @@
+defaults:
+  - _self_
+  - override hydra/launcher: joblib
+  # - override hydra/sweeper: optuna
+  # - override hydra/sweeper/sampler: tpe
+
+
+hydra:
+  launcher:
+    n_jobs: 1
+  
+  # sweeper:
+  #   sampler:
+  #     seed: 123
+  #   direction: minimize
+  #   study_name: ${mpc.wandb.group}${now:%Y%m%d-%H%M%S}
+  #   storage: null
+  #   n_trials: 200
+  #   n_jobs: 1
+
+  #   params:
+  #     mpc.Q_q1: tag(log, interval(1e-1, 1e1))
+  #     mpc.Q_q2: tag(log, interval(1e-1, 1e1))
+  #     mpc.Q_dq2: tag(log, interval(1e-2, 1e1))
+  #     mpc.Q_dq1: tag(log, interval(1e-2, 1e1))
+  #     mpc.Qe_scaler: tag(log, interval(1.0, 5e2))
+  #     mpc.R: tag(log, interval(1e0, 1e3))
+  #     mpc.N: int(tag(log, interval(100, 500)))
+  #     mpc.interpolate_init: choice(True, False)
+
+
+mpc:
+  wandb:
+    enable: True
+    group: "default"
+  
+  seed: 42
+
+  gt_model: False #### This overrides the model
+
+  model_nr: 305
+  model: "hpm_cartpole/model:v${mpc.model_nr}"
+
+  q_e_scaler: 10.0
+  dt: 0.01
+  N: 150
+
+  plot: False
+  plot_save_pred: False
+  render: True
+
+  SIM_LEN: 1000
+  name: ${mpc.wandb.group}${now:%Y%m%d-%H%M%S}

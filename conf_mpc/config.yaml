@@ -1,0 +1,68 @@
+defaults:
+  - _self_
+  - override hydra/launcher: joblib
+  # - override hydra/sweeper: optuna
+  # - override hydra/sweeper/sampler: tpe
+
+
+hydra:
+  launcher:
+    n_jobs: 1
+  
+  # sweeper:
+  #   sampler:
+  #     seed: 123
+  #   direction: minimize
+  #   study_name: ${mpc.wandb.group}${now:%Y%m%d-%H%M%S}
+  #   storage: null
+  #   n_trials: 200
+  #   n_jobs: 1
+
+  #   params:
+  #     mpc.Q_q1: tag(log, interval(1e-1, 1e1))
+  #     mpc.Q_q2: tag(log, interval(1e-1, 1e1))
+  #     mpc.Q_dq2: tag(log, interval(1e-2, 1e1))
+  #     mpc.Q_dq1: tag(log, interval(1e-2, 1e1))
+  #     mpc.Qe_scaler: tag(log, interval(1.0, 5e2))
+  #     mpc.R: tag(log, interval(1e0, 1e3))
+  #     mpc.N: int(tag(log, interval(100, 500)))
+  #     mpc.interpolate_init: choice(True, False)
+
+
+mpc:
+  wandb:
+    enable: True
+    group: "default"
+  
+  render: False
+  model_prefix: "f1tenth/hpm_acrobot/model:v"
+
+  # Hyper
+  # model_nr: 114
+
+  # Hyper long
+  # model_nr: 399
+
+  # Const
+  model_nr: 72
+
+  # Causal Hyper
+  # model_nr: 3866
+
+  model: ${mpc.model_prefix}${mpc.model_nr}
+
+  Q_q1: 1.0
+  Q_q2: 1.0
+  Q_dq1: 0.5
+  Q_dq2: 1.0
+  Q_u: 0.0
+  Qe_scaler: 2.0
+  R: 1e-5
+  N: 225
+  integrator_type: "IRK"
+  max_torque: 10.0
+  max_dtorque: 100.0
+
+  SIM_LEN: 1000
+  interpolate_init: False
+  name: ${mpc.wandb.group}${now:%Y%m%d-%H%M%S}

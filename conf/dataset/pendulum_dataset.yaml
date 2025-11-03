@@ -1,0 +1,55 @@
+# @package _global_
+
+dataset:
+  Tp: 0.01 # FIXME settings
+  
+  # without backlash as sanity check
+  # wandb_project: "hpm_pendulum"
+  # wandb_path: "wandb-registry-dataset/pendulum_datasets:v0"
+  
+  # with backlash 15 degrees
+  wandb_project: "hpm_pendulum_backlash"
+  wandb_path: "wandb-registry-dataset/pendulum_datasets:v1"
+
+  observation_window: 50
+  prediction_horizon: ${hpm.rollout.val} 
+
+  observarions_channels: 4
+  
+  observations_preprocessor:
+    _target_: "robot_model.pendulum.pendulum_preprocesor.PendulumObservationPreprocessor"
+    max_dq: 25.0
+    max_backlash: 1.0
+    max_d_backlash: 10.0
+    max_u: 1.0
+    backlash_only: False
+    state_only: True
+    compile: ${hpm.compile}
+
+  train_dataset:
+    _partial_: True
+    _target_: "dataset_reader.pendulum_dataset.PendulumHyperDataset"
+    # dataset_path from downloaded artifact
+    train_val_test_split: [0.7, 0.2, 0.1]
+    mode: "train"
+    observation_window: ${dataset.observation_window}
+    prediction_horizon: ${hpm.rollout.train}
+    stride: 5
+
+  val_dataset:
+    _partial_: True
+    _target_: ${dataset.train_dataset._target_}
+    # dataset_path from downloaded artifact
+    train_val_test_split: ${dataset.train_dataset.train_val_test_split}
+    mode: "val"
+    observation_window: ${dataset.observation_window}
+    prediction_horizon: ${hpm.rollout.val}
+    stride: 50
+
+  # Dataset loader settings
+  shuffle: True
+  dataloader_workers: 0
+
+
+  
+  

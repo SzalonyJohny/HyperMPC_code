@@ -1,0 +1,8 @@
+# @package _global_
+
+dmodel:
+  model:
+    _partial_: True
+    _target_: "robot_model.acrobot.acrobot_model.AcrobotDynamisc"
+
+  pretrain_init_model_path: ""

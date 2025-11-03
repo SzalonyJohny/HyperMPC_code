@@ -1,0 +1,91 @@
+defaults:
+  - _self_
+  
+  # # car
+  # - hmodel: hyper_causal_2
+  # - dmodel: car
+  # - dataset: car_dataset_new
+  # - hmodel/time_series_encoder: gru
+
+  # # pendulum
+  # - hmodel: const
+  # - dmodel: pendulum
+  # - dataset: pendulum_dataset
+  # - hmodel/time_series_encoder: gru
+
+  # drone
+  - hmodel: hyper_drone_f
+  - dmodel: drone_hyper_res
+  - dataset: drone_sim_dataset
+  - hmodel/time_series_encoder: gru
+
+  # cartpole
+  # - hmodel: const
+  # - dmodel: cartpole_nn
+  # - dataset: cartpole_dataset
+  # - hmodel/time_series_encoder: gru
+
+  - override hydra/launcher: joblib
+#   - override hydra/sweeper: optuna
+#   - override hydra/sweeper/sampler: tpe
+
+
+hydra:
+  launcher:
+    n_jobs: 10
+    
+  run:
+    dir: ./outputs/${now:%Y-%m-%d}/${now:%H-%M-%S-%f}
+
+#   sweeper:
+#     sampler:
+#       seed: 123
+#     direction: minimize
+#     study_name: mlp_model_cuda_2
+#     storage: null
+#     n_trials: 20
+#     n_jobs: 4
+
+#     params:
+#       hpm.optimizer.lr: tag(log, interval(5e-4, 1e-2))
+#       hpm.train.grad_clip: tag(log, interval(1e-4, 8e-3))
+#       hpm.train.delta_p_L2_loss: tag(log, interval(0.2, 0.50)) 
+#       hpm.train.delta_p_L2_loss: int(tag(log, interval(0.2, 0.50)))
+
+
+hpm: # Hyper Prediction Model settings
+  enable_wandb: True
+  seed: 42
+  device: "cpu"
+  max_cores: 1
+  compile: True
+  cuda_allow_tf32: False
+  integration_method: "rk4"
+  chunk_mode: True
+  chunk_size: 10 # 7 
+
+  train:
+    epoch: 2000
+    batch_size: 256
+    grad_clip: 0.0005
+    delta_p_L2_loss: 0.05
+    delta_p_L2_loss_sin: 0.0
+    start_future_head_training: 0
+  
+  optimizer:
+    _target_: "torch.optim.AdamW"
+    lr: 0.0005
+    weight_decay: 0.01
+    fused: True
+    _partial_: True   
+
+  wandb:
+    table_len: 2000
+    send_interval: 200
+    group: "default"
+
+  rollout:
+    train: 100
+    val: 100
+  
+  mlp_size: 32

@@ -1,0 +1,123 @@
+defaults:
+  - _self_
+  - override hydra/launcher: joblib
+  # - override hydra/sweeper: optuna
+  # - override hydra/sweeper/sampler: tpe
+
+
+hydra:
+  launcher:
+    n_jobs: 1
+  
+  # sweeper:
+  #   sampler:
+  #     seed: 123
+  #   direction: minimize
+  #   study_name: ${mpc.wandb.group}${now:%Y%m%d-%H%M%S}
+  #   storage: null
+  #   n_trials: 200
+  #   n_jobs: 1
+
+  #   params:
+  #     mpc.Q_q1: tag(log, interval(1e-1, 1e1))
+
+mpc:
+  wandb:
+    enable: True
+    group: "default"
+
+
+  # const 
+  model: "hpm_car/model:v23324"
+
+  # const short
+  # model: "hpm_car/model:v23786"
+
+  # hyper hidden size 16
+  # model: "hpm_car/model:v23598"
+
+  # hyper hidden size 8
+  # model: "hpm_car/model:v23377"
+
+  # hyper 0.5 control sigma
+  # model: "hpm_car/model:v23624"
+
+  # long horizon
+  # model: "hpm_car/model:v23627"
+
+  # 0.5sigma 0.2 delta loss
+  # model: "hpm_car/model:v23646"
+
+  # 16ctrl 0.5sigma l0.2
+  # model: "hpm_car/model:v23636"
+
+  # without predictor
+  # model: "hpm_car/model:v23678"
+
+  # 10 ctrl points 0.5 sigma l 0.2 
+  # model: "hpm_car/model:v24290"
+
+  # 8 ctrl points 0.5 sigma l 0.2 THE USED ONE
+  # model: "hpm_car/model:v23679"
+
+  # 8 ctrl points 0.5 sigma l 0.1
+  # model: "hpm_car/model:v23680"
+
+  # Hyper Dynamics long
+  # model: "hpm_car/model:v23959"
+
+  # Hyper Dynamics short 2
+  # model: "hpm_car/model:v23821"
+
+  # Residual model [2 x 32]
+  # model: "hpm_car/model:v23617"
+
+  # Residual model [1 x 64] tanh
+  # model: "hpm_car/model:v24236"
+  residual_model: False
+
+  # track_name: "lab_curvy_v1"
+  # track_name: "lab_usa_v3"
+  # track_name: "lab_monza"
+  track_name: "drift_park_track"
+  # track_name: "track_bounds_accurate_round_abudhabi"
+
+  freq_div: 2 # efecctive freq div = 3
+  dt: 0.033 # 1 / 100Hz / 3
+  N: 80
+  
+  # make last n ctrl point on const
+  n_last_const: 1
+
+  # actuator model
+  steering_time_constant: 0.0436734693877551
+  wheel_speed_time_constant: 0.046122448979591835
+
+  # mpc weights
+  q_beta: 1.0
+  q_n: 0.02
+  q_mu: 0.002
+  q_delta: 2.0
+  q_slip: 0.1
+  q_speed_diff: 2.0
+  q_e_scaler: 1.0
+  q_mu_e : 5.0
+
+  # mpc constraints
+  soft_constraint_lambda: 200.0
+  q_track_constraint: 1.0
+
+  track_width: 0.25
+  min_wheel_speed_ref: 0.01 #0.50
+  max_wheel_speed_ref: 7.0
+
+  # Sim settings
+  sim: False
+  SIM_LEN: 400
+  interpolate_init: False
+  name: ${mpc.wandb.group}${now:%Y%m%d-%H%M%S}
+
+  # eval settings
+  test_time: 30 # sec
+
+

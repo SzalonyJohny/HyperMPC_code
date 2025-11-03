@@ -1,0 +1,95 @@
+defaults:
+  - _self_
+  - override hydra/launcher: joblib
+  # - override hydra/sweeper: optuna
+  # - override hydra/sweeper/sampler: tpe
+
+
+hydra:
+  launcher:
+    n_jobs: 1
+  
+  # sweeper:
+  #   sampler:
+  #     seed: 123
+  #   direction: minimize
+  #   study_name: ${mpc.wandb.group}${now:%Y%m%d-%H%M%S}
+  #   storage: null
+  #   n_trials: 200
+  #   n_jobs: 1
+
+  #   params:
+  #     mpc.Q_q1: tag(log, interval(1e-1, 1e1))
+  #     mpc.Q_q2: tag(log, interval(1e-1, 1e1))
+  #     mpc.Q_dq2: tag(log, interval(1e-2, 1e1))
+  #     mpc.Q_dq1: tag(log, interval(1e-2, 1e1))
+  #     mpc.Qe_scaler: tag(log, interval(1.0, 5e2))
+  #     mpc.R: tag(log, interval(1e0, 1e3))
+  #     mpc.N: int(tag(log, interval(100, 500)))
+  #     mpc.interpolate_init: choice(True, False)
+
+
+mpc:
+  wandb:
+    enable: True
+    group: "default"
+  
+  seed: 42
+  
+  plot: False
+  plot_save_pred: False
+  render: True
+
+  model_prefix: "f1tenth/hpm_pendulum_backlash/model:v"
+  model: ${mpc.model_prefix}${mpc.model_nr}
+  residual_model: False
+  sim_backlash: 15.0
+
+  # Hyper
+  # model_nr: 701 #642
+
+  # HyperPM_np
+  # model_nr: 1431
+
+  # Const
+  # model_nr: 1189
+
+  # Const short
+  # model_nr: 1427
+
+  # Hyperdynamics long
+  # model_nr: 1310 #1266 #1473
+
+  # Hyperdynamics short
+  # model_nr: 1244
+
+  # Ideal model with adaptation
+  model_nr: 1192
+  adaptation: True
+
+  dt: 0.01
+
+  y_ref_traj: False
+  y_ref_freq: 1.0
+  y_ref_A: 1.0
+
+  y_ref: [3.14159, 0.0, 0.0, 0.0] # [q, dq, u, du]
+
+  # random angle in [-pi, pi] and a random angular velocity in [-1,1].
+  x_start: [0.0, 0.0, 0.0] 
+
+  # cost = (theta**2 + 0.1 * theta_dt**2 + 0.001 * torque**2)
+  Q_q: 1.0
+  Q_dq: 0.1
+  Q_u: 0.001
+  
+  # Terminal cost and dudt cost
+  Qe_scaler: 1.0
+  R: 0.00000001
+  N: 350
+  integrator_type: "ERK"
+  max_torque: 1.0
+  max_dtorque: 100.0
+
+  SIM_LEN: 1000
+  name: ${mpc.wandb.group}${now:%Y%m%d-%H%M%S}

@@ -1,0 +1,16 @@
+# @package _global_
+hmodel:
+  model:
+    time_series_encoder:
+      _target_: "hyper_prediction_models.tcnn_time_series_encoder.TCNNTimeSeriesEncoder"
+      observations_preprocessor: ${dataset.observations_preprocessor}
+      
+      observations_channels: ${dataset.observarions_channels}
+      
+      filter_count: 4
+      kernel_len: 5
+      observation_length: 15
+      time_series_latent_size: ${hmodel.time_series_laten_size}
+      layer_norm: False
+      compile: True
+      device: ${hpm.device} 

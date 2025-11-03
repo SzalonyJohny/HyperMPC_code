@@ -1,0 +1,8 @@
+# @package _global_
+
+dmodel:
+  model:
+    _partial_: True
+    _target_: "robot_model.acrobot.acrobot_model_only_baclkash.AcrobotDynamiscBacklashOnly"
+
+  pretrain_init_model_path: "" #"hpm_acrobot_backlash/model:v2"

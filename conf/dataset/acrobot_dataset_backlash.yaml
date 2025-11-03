@@ -1,0 +1,59 @@
+# @package _global_
+
+dataset:
+  Tp: 0.01 # FIXME settings
+  wandb_project: "hpm_acrobot_backlash"
+
+  # without backlash as sanity check
+  # wandb_path: "wandb-registry-dataset/acrobot_backlash_datasets:v1"
+  
+  # with backlash 5 degrees
+  wandb_path: "wandb-registry-dataset/acrobot_backlash_datasets:v2" 
+
+  observation_window: 25
+  prediction_horizon: 85
+
+  observarions_channels: 4
+  
+  observations_preprocessor:
+    _target_: "robot_model.acrobot.observation_preprocesor_backlash.AcrobotObservationPreprocessor"
+    max_dq1: 30.0
+    max_dq2: 40.0
+    max_u: 4.0
+    only_control: False
+    drop_control: False
+    drop_pos: True
+    compile: ${hpm.compile}
+
+  train_dataset:
+    _partial_: True
+    _target_: "dataset_reader.acrobot_dataset.AcrobotHyperDataset"
+    # dataset_path from downloaded artifact
+    train_val_test_split: [0.7, 0.2, 0.1]
+    mode: "train"
+    observation_window: ${dataset.observation_window}
+    prediction_horizon: ${dataset.prediction_horizon}
+    M_cols: ["q1", "q2", "dq1", "dq2", "backlash", "u"]
+    P_cols: ["u"]
+    stride: 5
+
+
+  val_dataset:
+    _partial_: True
+    _target_: ${dataset.train_dataset._target_}
+    # dataset_path from downloaded artifact
+    train_val_test_split: ${dataset.train_dataset.train_val_test_split}
+    mode: "val"
+    observation_window: ${dataset.observation_window}
+    prediction_horizon: ${dataset.prediction_horizon}
+    M_cols: ${dataset.train_dataset.M_cols}
+    P_cols: ${dataset.train_dataset.P_cols}
+    stride: 50
+
+  # Dataset loader settings
+  shuffle: True
+  dataloader_workers: 0
+
+
+  
+  

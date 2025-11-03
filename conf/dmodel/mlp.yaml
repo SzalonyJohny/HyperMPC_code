@@ -1,0 +1,10 @@
+# @package _global_
+
+dmodel:
+  model:
+    _target_: "robot_model.mlp.mlp_external_p.MlpExternalParams"
+    preprocessor: ${dataset.observations_preprocessor}
+    layer_sizes: [6, 32, 32, 2]
+    activation:
+      _target_: "torch.nn.Tanh"
+    compile_model: ${hpm.compile}
